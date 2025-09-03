@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator App</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      background: #111;
+      font-family: Arial, sans-serif;
+      gap: 30px;
+      padding: 20px;
+    }
+
+    /* Toggle Switch */
+    .top-bar {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Calculator */
+    .calculator {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 25px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: background 0.4s, color 0.4s;
+    }
+
+    .calculator.dark {
+      background: #1c1c1c;
+      color: #fff;
+    }
+
+    .calculator.light {
+      background: #fdfdfd;
+      color: #000;
+    }
+
+    .display {
+      font-size: 2rem;
+      text-align: right;
+      padding: 20px 10px;
+      border-radius: 10px;
+      background: transparent;
+      overflow-x: auto;
+    }
+
+    .display span {
+      display: block;
+      word-wrap: break-word;
+    }
+
+    #history {
+      font-size: 1rem;
+      color: gray;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* Scientific buttons grid */
+    .scientific {
+      display: none;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .scientific.show {
+      display: grid;
+    }
+
+    /* Neumorphic Buttons */
+    button {
+      height: 65px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .calculator.dark button {
+      background: #2d2d2d;
+      color: #fff;
+      box-shadow: 4px 4px 8px #141414, -4px -4px 8px #383838;
+    }
+
+    .calculator.light button {
+      background: #f0f0f0;
+      color: #000;
+      box-shadow: 4px 4px 8px #d4d4d4, -4px -4px 8px #ffffff;
+    }
+
+    button:active {
+      transform: scale(0.92);
+      box-shadow: inset 2px 2px 6px rgba(0,0,0,0.4),
+                  inset -2px -2px 6px rgba(255,255,255,0.3);
+    }
+
+    .orange {
+      background: orange !important;
+      color: #fff !important;
+      box-shadow: 4px 4px 8px rgba(160, 90, 0, 0.8),
+                  -4px -4px 8px rgba(255, 200, 120, 0.9);
+    }
+
+    .gray {
+      background: #a5a5a5 !important;
+      color: #000 !important;
+    }
+
+    .zero {
+      grid-column: span 2;
+      border-radius: 35px;
+    }
+    <style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  /* Calculator Styles */
+  .top-bar {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider { background-color: #2196F3; }
+  input:checked + .slider:before { transform: translateX(26px); }
+
+  .calculator {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transition: background 0.4s, color 0.4s;
+  }
+  .calculator.dark { background: #1c1c1c; color: #fff; }
+  .calculator.light { background: #fdfdfd; color: #000; }
+
+  .display {
+    font-size: 2rem;
+    text-align: right;
+    padding: 20px 10px;
+    border-radius: 10px;
+    background: transparent;
+    overflow-x: auto;
+  }
+  #history { font-size: 1rem; color: gray; }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .scientific {
+    display: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+  }
+  .scientific.show { display: grid; }
+
+  button {
+    height: 65px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .calculator.dark button {
+    background: #2d2d2d;
+    color: #fff;
+    box-shadow: 4px 4px 8px #141414, -4px -4px 8px #383838;
+  }
+  .calculator.light button {
+    background: #f0f0f0;
+    color: #000;
+    box-shadow: 4px 4px 8px #d4d4d4, -4px -4px 8px #ffffff;
+  }
+  button:active {
+    transform: scale(0.92);
+    box-shadow: inset 2px 2px 6px rgba(0,0,0,0.4),
+                inset -2px -2px 6px rgba(255,255,255,0.3);
+  }
+  .orange {
+    background: orange !important;
+    color: #fff !important;
+  }
+  .gray {
+    background: #a5a5a5 !important;
+    color: #000 !important;
+  }
+  .zero {
+    grid-column: span 2;
+    border-radius: 35px;
+  }
+</style>
+
+  </style>
+</head>
+<body>
+  <!-- Mode Toggles -->
+  <div class="top-bar">
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="slider"></span>
+      </label>
+      <span id="modeLabel">Dark Mode</span>
+    </div>
+
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="sciToggle">
+        <span class="slider"></span>
+      </label>
+      <span id="sciLabel">Basic</span>
+    </div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="calculator dark" id="calculator">
+    <div class="display">
+      <span id="history"></span>
+      <span id="result">0</span>
+    </div>
+
+    <!-- Calculator Modal -->
+<div id="calculatorModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content p-3">
+
+      <!-- Mode Toggles -->
+      <div class="top-bar">
+        <div class="toggle-container">
+          <label class="switch">
+            <input type="checkbox" id="modeToggle">
+            <span class="slider"></span>
+          </label>
+          <span id="modeLabel">Dark Mode</span>
+        </div>
+
+        <div class="toggle-container">
+          <label class="switch">
+            <input type="checkbox" id="sciToggle">
+            <span class="slider"></span>
+          </label>
+          <span id="sciLabel">Basic</span>
+        </div>
+      </div>
+
+      <!-- Calculator -->
+      <div class="calculator dark" id="calculator">
+        <div class="display">
+          <span id="history"></span>
+          <span id="result">0</span>
+        </div>
+
+        <!-- Scientific Buttons -->
+        <div class="buttons scientific" id="scientificButtons">
+          <button id="secondBtn" onclick="toggleSecond()">2nd</button>
+          <button id="sinBtn" onclick="appendSci('Math.sin(')">sin</button>
+          <button id="cosBtn" onclick="appendSci('Math.cos(')">cos</button>
+          <button id="tanBtn" onclick="appendSci('Math.tan(')">tan</button>
+          <button id="logBtn" onclick="appendSci('Math.log10(')">log</button>
+          <button id="lnBtn" onclick="appendSci('Math.log(')">ln</button>
+          <button id="sqrtBtn" onclick="appendSci('Math.sqrt(')">√</button>
+          <button id="powBtn" onclick="appendSci('**2')">x²</button>
+          <button onclick="appendSci('Math.PI')">π</button>
+          <button onclick="appendSci('Math.E')">e</button>
+        </div>
+
+        <!-- Basic Buttons -->
+        <div class="buttons">
+          <button class="gray" onclick="clearDisplay()">C</button>
+          <button class="gray" onclick="appendInput('%')">%</button>
+          <button class="gray" onclick="deleteLast()">⌫</button>
+          <button class="orange" onclick="appendInput('/')">÷</button>
+
+          <button onclick="appendInput('7')">7</button>
+          <button onclick="appendInput('8')">8</button>
+          <button onclick="appendInput('9')">9</button>
+          <button class="orange" onclick="appendInput('*')">×</button>
+
+          <button onclick="appendInput('4')">4</button>
+          <button onclick="appendInput('5')">5</button>
+          <button onclick="appendInput('6')">6</button>
+          <button class="orange" onclick="appendInput('-')">−</button>
+
+          <button onclick="appendInput('1')">1</button>
+          <button onclick="appendInput('2')">2</button>
+          <button onclick="appendInput('3')">3</button>
+          <button class="orange" onclick="appendInput('+')">+</button>
+
+          <button class="zero" onclick="appendInput('0')">0</button>
+          <button onclick="appendInput('.')">.</button>
+          <button class="orange" onclick="calculate()">=</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      }
+    }
+  </script>
+</body>
+</html>
