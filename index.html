@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Mode Toggles -->
+  <div class="top-bar">
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="slider"></span>
+      </label>
+      <span id="modeLabel">Dark Mode</span>
+    </div>
+
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="sciToggle">
+        <span class="slider"></span>
+      </label>
+      <span id="sciLabel">Basic</span>
+    </div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="calculator dark" id="calculator">
+    <div class="display">
+      <span id="history"></span>
+      <span id="result">0</span>
+    </div>
+
+    <!-- Scientific Buttons (hidden by default) -->
+    <div class="buttons scientific" id="scientificButtons">
+      <button onclick="appendSci('Math.sin(')">sin</button>
+      <button onclick="appendSci('Math.cos(')">cos</button>
+      <button onclick="appendSci('Math.tan(')">tan</button>
+      <button onclick="appendSci('Math.log10(')">log</button>
+      <button onclick="appendSci('Math.log(')">ln</button>
+      <button onclick="appendSci('Math.sqrt(')">√</button>
+      <button onclick="appendSci('**2')">x²</button>
+      <button onclick="appendSci('Math.PI')">π</button>
+      <button onclick="appendSci('Math.E')">e</button>
+    </div>
+
+    <!-- Basic Buttons -->
+    <div class="buttons">
+      <button class="gray" onclick="clearDisplay()">C</button>
+      <button class="gray" onclick="appendInput('%')">%</button>
+      <button class="gray" onclick="deleteLast()">⌫</button>
+      <button class="orange" onclick="appendInput('/')">÷</button>
+
+      <button onclick="appendInput('7')">7</button>
+      <button onclick="appendInput('8')">8</button>
+      <button onclick="appendInput('9')">9</button>
+      <button class="orange" onclick="appendInput('*')">×</button>
+
+      <button onclick="appendInput('4')">4</button>
+      <button onclick="appendInput('5')">5</button>
+      <button onclick="appendInput('6')">6</button>
+      <button class="orange" onclick="appendInput('-')">−</button>
+
+      <button onclick="appendInput('1')">1</button>
+      <button onclick="appendInput('2')">2</button>
+      <button onclick="appendInput('3')">3</button>
+      <button class="orange" onclick="appendInput('+')">+</button>
+
+      <button class="zero" onclick="appendInput('0')">0</button>
+      <button onclick="appendInput('.')">.</button>
+      <button class="orange" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
